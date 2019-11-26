@@ -1,22 +1,22 @@
 const readline = require("readline");
 
 module.exports = Conversation = class {
-  constructor(model) {
+  constructor({ git, util }) {
     const rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
       terminal: false
     });
 
-    Object.assign(this, { rl, model, head: ["", ""] });
+    Object.assign(this, { rl, git, util, head: ["", ""] });
   }
 
   init = _ => {
-    this.rl.question(this.head.join("/") + ">", this.callback);
+    this.rl.question(this.head.join("/") + "> ", this.callback);
   };
 
   callback = answer => {
-    if (answer == "exit") {
+    if (answer === "exit") {
       console.log("\u001b[32m(프로그램 종료)\u001b[37m");
       this.rl.close();
     } else {
@@ -25,12 +25,63 @@ module.exports = Conversation = class {
       } catch (e) {
         console.log(e.message);
       } finally {
-        this.rl.question(this.head.join("/") + ">", this.callback);
+        this.rl.question(this.head.join("/") + "> ", this.callback);
       }
     }
   };
 
-  execution = answer => {
-    console.log(answer);
+  execution = instruction => {
+    const [type, ...details] = instruction.split(" ");
+    if (this.isGitFunc(type)) {
+      this.gitFunc(details);
+    } else {
+      this.utilFunc(type, details);
+    }
+  };
+
+  isGitFunc = token => token === "git";
+
+  gitFunc = ([type, ...details]) => {
+    switch (type) {
+      case "init":
+        break;
+      case "clone":
+        break;
+      case "add":
+        break;
+      case "commit":
+        break;
+      case "status":
+        break;
+      case "log":
+        break;
+      case "branch":
+        break;
+      case "checkout":
+        break;
+      case "push":
+        break;
+      default:
+        throw new Error("\u001b[31m잘못된 명령입니다.\u001b[37m");
+    }
+    console.log(type);
+    console.log(details);
+  };
+
+  utilFunc = (type, details) => {
+    switch (type) {
+      case "new":
+        break;
+      case "cd":
+        break;
+      case "ls":
+        break;
+      case "touch":
+        break;
+      default:
+        throw new Error("\u001b[31m잘못된 명령입니다.\u001b[37m");
+    }
+    console.log(type);
+    console.log(details);
   };
 };
