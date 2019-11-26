@@ -21,6 +21,14 @@ function cdWithoutParam(){
   return '';
 }
 
+function gitClone(repositoryName){
+  let content = fs.readFileSync(`./remote/${repositoryName}.json`, 'utf8');
+  fs.writeFileSync(`./${repositoryName}.json`, content, err => {
+    if (err) return console.log(err);
+  });
+  console.log(content);
+}
+
 function gitParsing(cmd){
   let arr = cmd.split(' ');
   if(arr && arr.length === 3 && arr[0] ==='git' && arr[1] === 'init'){
@@ -31,6 +39,9 @@ function gitParsing(cmd){
   }
   else if (arr && arr.length === 1 && arr[0] === 'cd'){
     return cdWithoutParam();
+  }
+  else if (arr && arr.length === 3 && arr[0] === 'git' && arr[1] === 'clone'){
+    return gitClone(arr[2]);
   }
 }
 
