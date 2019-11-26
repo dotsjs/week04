@@ -126,6 +126,19 @@ module.exports = Model = class {
       throw new Error("레파지토리가 아닙니다");
     }
   };
+
+  changeBranch = name => {
+    if (this.nowRepository) {
+      if (name) {
+        this.nowRepository.changeBranch(name);
+        this.view.print("브랜치 이동 완료");
+      } else {
+        throw new Error("브랜치 이름을 작성하세요");
+      }
+    } else {
+      throw new Error("레파지토리가 아닙니다");
+    }
+  };
   showLog = _ => {
     if (this.nowRepository) {
       const logs = this.nowRepository.head.getLogs().reverse();
