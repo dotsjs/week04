@@ -1,13 +1,18 @@
 const Repository = require("./Repository");
 module.exports = Model = class {
-  constructor() {
+  constructor(view) {
     Object.assign(this, {
-      repositories: []
+      repositories: [],
+      view
     });
   }
-  newRepository = name =>
+  newRepository = name => {
     Object.assign(this, {
       repositories: [...this.repositories, new Repository(name)]
     });
-  list = _ => this.repositories.map(({ name }) => name);
+    this.view.print("레파지토리 생성 완료");
+  };
+  list = _ => {
+    this.view.print(this.repositories.map(({ name }) => name).join("\n"));
+  };
 };

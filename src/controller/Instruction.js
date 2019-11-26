@@ -3,7 +3,7 @@ module.exports = Instruction = class {
     Object.assign(this, { model });
   }
   ls = _ => {
-    console.log(this.model.list());
+    this.model.list();
   };
   new = ([name]) => {};
   cd = details => {
