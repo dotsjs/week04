@@ -176,13 +176,13 @@ module.exports = Model = class {
     if (this.nowRepository === null) {
       const remote = Remote.getClone(name);
       if (remote) {
-        const newRepository = new Repository();
         Object.assign(this, {
           repositories: [
             ...this.repositories,
-            Object.assign(newRepository, remote)
+            new Repository(remote.name, remote)
           ]
         });
+        this.view.print(name + " 레파지토리 클론 완료");
       } else {
         throw new Error("없는 레파지토리 입니다");
       }

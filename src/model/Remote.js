@@ -11,11 +11,14 @@ module.exports = Remote = class {
 
   static getClone = name => {
     const data = this.readFile(name);
-    const repository = JSON.parse(data.toString());
-    return {
-      name,
-      ...repository
-    };
+    if (data) {
+      const repository = JSON.parse(data.toString());
+      return {
+        name,
+        ...repository
+      };
+    }
+    return null;
   };
 
   static readFile = name => {
