@@ -1,16 +1,24 @@
 const fs = require("fs");
 module.exports = Remote = class {
-  constructor({ name, head }) {
+  constructor({ name, head, branchList }) {
     Object.assign(this, {
       name,
-      branch: {
-        [head.name]: head
-      }
+      head,
+      branchList
     });
     this.saveFile(name, head);
   }
 
-  readFile = name => {
+  static getClone = name => {
+    const data = this.readFile(name);
+    const repository = JSON.parse(data.toString());
+    return {
+      name,
+      ...repository
+    };
+  };
+
+  static readFile = name => {
     try {
       const data = fs.readFileSync(`remote/${name}.json`);
       return data;
@@ -31,8 +39,10 @@ module.exports = Remote = class {
         }
       )
     );
-    fs.writeFileSync(`remote/${name}.json`, content, err => {
-      if (err) throw new Error(err);
-    });
+    try {
+      fs.writeFileSync(`remote/${name}.json`, content);
+    } catch (e) {
+      throw new Error(e);
+    }
   };
 };

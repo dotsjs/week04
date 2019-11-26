@@ -10,7 +10,7 @@ module.exports = Instruction = class {
   status = _ => this.model.status();
   log = _ => this.model.showLog();
   init = ([name]) => this.model.newRepository(name);
-  clone = details => {};
+  clone = ([name]) => this.model.loadRepository(name);
   add = ([name]) => this.model.stagingFile(name);
   commit = ([message]) => this.model.commit(message);
   branch = ([name]) => this.model.makeBranch(name);

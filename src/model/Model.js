@@ -172,4 +172,22 @@ module.exports = Model = class {
       throw new Error("레파지토리가 아닙니다");
     }
   };
+  loadRepository = name => {
+    if (this.nowRepository === null) {
+      const remote = Remote.getClone(name);
+      if (remote) {
+        const newRepository = new Repository();
+        Object.assign(this, {
+          repositories: [
+            ...this.repositories,
+            Object.assign(newRepository, remote)
+          ]
+        });
+      } else {
+        throw new Error("없는 레파지토리 입니다");
+      }
+    } else {
+      throw new Error("루트에서 실행하세요");
+    }
+  };
 };
