@@ -22,6 +22,19 @@ module.exports = Model = class {
     }
   };
 
+  stagingFile = name => {
+    if (this.nowRepository) {
+      const [file] = this.nowRepository.head.getFile(name);
+      if (file) {
+        this.nowRepository.head.stagingFile(file);
+      } else {
+        throw new Error("파일이 working directory에 없음");
+      }
+      this.view.print(name + " 파일이 Staging 됨");
+    } else {
+      throw new Error("레파지토리가 아닙니다");
+    }
+  };
   status = _ => {
     if (this.nowRepository) {
       const head = this.nowRepository.head;

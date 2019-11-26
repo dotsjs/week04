@@ -15,7 +15,7 @@ module.exports = Instruction = class {
     this.model.newRepository(name);
   };
   clone = details => {};
-  add = details => {};
+  add = ([name]) => this.model.stagingFile(name);
   commit = details => {};
   branch = details => {};
   checkout = details => {};
