@@ -29,6 +29,15 @@ function gitClone(repositoryName){
   console.log(content);
 }
 
+function ls(){
+  let files = fs.readdirSync('./');
+  for(let i=0; i<files.length; i++){
+    if(files[i].endsWith('.json')){
+      console.log(files[i].split('.')[0]);
+    }
+  }
+}
+
 function gitParsing(cmd){
   let arr = cmd.split(' ');
   if(arr && arr.length === 3 && arr[0] ==='git' && arr[1] === 'init'){
@@ -42,6 +51,9 @@ function gitParsing(cmd){
   }
   else if (arr && arr.length === 3 && arr[0] === 'git' && arr[1] === 'clone'){
     return gitClone(arr[2]);
+  }
+  else if (arr && arr.length === 1 && arr[0] === 'ls'){
+    return ls(arr[0]);
   }
 }
 
