@@ -12,7 +12,10 @@ function prompt(cb) {
     if(line =='exit'){
       rl.close();
     }
-    cb(line);
+    let path = cb(line);
+    if(typeof path === 'string'){
+      rl.setPrompt(`${path}>`)
+    }
     rl.prompt();
   });
 
