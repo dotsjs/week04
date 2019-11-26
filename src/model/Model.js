@@ -1,3 +1,5 @@
 module.exports = Model = class {
-  constructor() {}
+  constructor() {
+    Object.assign(this, { File: require("./File") });
+  }
 };

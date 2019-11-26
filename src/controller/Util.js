@@ -4,8 +4,9 @@ module.exports = Util = class extends Instruction {
     super(model);
   }
   ls = _ => {};
-  new = details => {
-    console.log(details);
+  new = ([name]) => {
+    const file = new this.model.File(name);
+    console.log(file);
   };
   cd = details => {
     console.log(details);
