@@ -1,5 +1,6 @@
 const File = require("./File");
 const Log = require("./Log");
+const { isSameFile } = require("../lib");
 module.exports = Branch = class {
   constructor(
     name,
@@ -29,13 +30,6 @@ module.exports = Branch = class {
 
     return log;
   };
-  isSameFile = (fileA, fileB) => {
-    const { name, date, state } = fileA;
-    if (fileB.name === name && fileB.date === date && fileB.state === state) {
-      return true;
-    }
-    return false;
-  };
   newFile = name =>
     Object.assign(this, {
       workingDirectory: [...this.workingDirectory, new File(name)]
@@ -47,10 +41,10 @@ module.exports = Branch = class {
       Object.assign(this, {
         workingDirectory: [...this.workingDirectory, file],
         stagingArea: this.stagingArea.filter(
-          expect => !this.isSameFile(file, expect)
+          expect => !isSameFile(file, expect)
         ),
         gitRepository: this.gitRepository.filter(
-          expect => !this.isSameFile(file, expect)
+          expect => !isSameFile(file, expect)
         )
       });
     }
@@ -59,14 +53,14 @@ module.exports = Branch = class {
     file.setState("Staged");
     Object.assign(this, {
       workingDirectory: this.workingDirectory.filter(
-        expect => !this.isSameFile(file, expect)
+        expect => !isSameFile(file, expect)
       ),
       stagingArea: [...this.stagingArea, file]
     });
   };
 
   inWorkingDirectory = file =>
-    this.workingDirectory.some(expect => this.isSameFile(file, expect));
+    this.workingDirectory.some(expect => isSameFile(file, expect));
 
   getFile = name => this.getFiles().filter(file => file.name === name);
 

@@ -7,4 +7,5 @@ const print = new Print();
 const model = new Model(print);
 const instruction = new Instruction(model);
 const conversation = new Conversation(instruction);
+
 conversation.init();

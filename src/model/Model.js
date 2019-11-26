@@ -1,5 +1,6 @@
 const Repository = require("./Repository");
 const Remote = require("./Remote");
+const { checkNow } = require("../lib");
 module.exports = Model = class {
   constructor(view) {
     Object.assign(this, {
@@ -10,14 +11,6 @@ module.exports = Model = class {
     });
   }
 
-  checkNow = callback => {
-    if (this.nowRepository) {
-      callback();
-    } else {
-      throw new Error("\u001b[31m레파지토리가 아닙니다\u001b[37m");
-    }
-  };
-
   newRepository = name => {
     Object.assign(this, {
       repositories: [...this.repositories, new Repository(name)]
@@ -25,13 +18,13 @@ module.exports = Model = class {
     this.view.print("\u001b[32m레파지토리 생성 완료\u001b[37m");
   };
   newFile = name => {
-    this.checkNow(() => {
+    checkNow(this.nowRepository, () => {
       this.nowRepository.head.newFile(name);
       this.view.print(`\u001b[32m${name} 파일이 생성되었습니다\u001b[37m`);
     });
   };
   editFile = name => {
-    this.checkNow(() => {
+    checkNow(this.nowRepository, () => {
       const [file] = this.nowRepository.head.getFile(name);
       if (file) {
         this.nowRepository.head.editFile(file);
@@ -43,7 +36,7 @@ module.exports = Model = class {
   };
 
   stagingFile = name => {
-    this.checkNow(() => {
+    checkNow(this.nowRepository, () => {
       const [file] = this.nowRepository.head.getFile(name);
       if (file) {
         if (this.nowRepository.head.inWorkingDirectory(file)) {
@@ -58,7 +51,7 @@ module.exports = Model = class {
     });
   };
   status = _ => {
-    this.checkNow(() => {
+    checkNow(this.nowRepository, () => {
       const head = this.nowRepository.head;
       const { workingDirectory, stagingArea, gitRepository } = head.getStatus();
 
@@ -107,13 +100,13 @@ module.exports = Model = class {
     }
   };
   commit = message => {
-    this.checkNow(() => {
+    checkNow(this.nowRepository, () => {
       const log = this.nowRepository.head.commit(message);
       this.view.print(`\u001b[36m[${log.id}] ${message}\u001b[37m`);
     });
   };
   makeBranch = name => {
-    this.checkNow(() => {
+    checkNow(this.nowRepository, () => {
       if (name) {
         this.nowRepository.makeBranch(name);
         this.view.print("\u001b[33m브랜치 생성 완료\u001b[37m");
@@ -122,7 +115,9 @@ module.exports = Model = class {
         this.view.print(
           branches
             .map(({ name }) =>
-              this.nowRepository.head.name === name ? `* ${name}` : name
+              this.nowRepository.head.name === name
+                ? `\u001b[32m* ${name}\u001b[37m`
+                : name
             )
             .join("\n")
         );
@@ -131,7 +126,7 @@ module.exports = Model = class {
   };
 
   changeBranch = name => {
-    this.checkNow(() => {
+    checkNow(this.nowRepository, () => {
       if (name) {
         this.nowRepository.changeBranch(name);
         this.view.print("\u001b[33m브랜치 이동 완료\u001b[37m");
@@ -141,7 +136,7 @@ module.exports = Model = class {
     });
   };
   showLog = _ => {
-    this.checkNow(() => {
+    checkNow(this.nowRepository, () => {
       const logs = this.nowRepository.head.getLogs().reverse();
       this.view.print(
         logs
@@ -156,7 +151,7 @@ module.exports = Model = class {
 
   getRemote = name => this.remotes.filter(remote => remote.name === name);
   saveRepository = _ => {
-    this.checkNow(() => {
+    checkNow(this.nowRepository, () => {
       const [remote] = this.getRemote(this.nowRepository.name);
       if (!remote) {
         Object.assign(this, {

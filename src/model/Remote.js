@@ -1,4 +1,5 @@
-const fs = require("fs");
+const { saveFile, readFile } = require("../lib");
+
 module.exports = Remote = class {
   constructor({ name, head, branchList }) {
     Object.assign(this, {
@@ -6,11 +7,11 @@ module.exports = Remote = class {
       head,
       branchList
     });
-    this.saveFile(name, head);
+    saveFile(name, head);
   }
 
   static getClone = name => {
-    const data = this.readFile(name);
+    const data = readFile(name);
     if (data) {
       const repository = JSON.parse(data.toString());
       return {
@@ -19,33 +20,5 @@ module.exports = Remote = class {
       };
     }
     return null;
-  };
-
-  static readFile = name => {
-    try {
-      const data = fs.readFileSync(`remote/${name}.json`);
-      return data;
-    } catch {
-      return null;
-    }
-  };
-
-  saveFile = (name, head) => {
-    const content = JSON.stringify(
-      Object.assign(
-        {},
-        {
-          workingDirectory: head.workingDirectory,
-          stagingArea: head.stagingArea,
-          gitRepository: head.gitRepository,
-          logs: head.logs
-        }
-      )
-    );
-    try {
-      fs.writeFileSync(`remote/${name}.json`, content);
-    } catch (e) {
-      throw new Error(e);
-    }
   };
 };

@@ -10,8 +10,6 @@ module.exports = File = class {
     });
   }
 
-  rename = name => Object.assign(this, { name });
-
   setState = state =>
     Object.assign(this, {
       state,

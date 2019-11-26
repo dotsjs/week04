@@ -1,12 +1,7 @@
 const Branch = require("./Branch");
 module.exports = Repository = class {
   constructor(name, remote) {
-    let head;
-    if (remote) {
-      head = new Branch("master", remote);
-    } else {
-      head = new Branch("master");
-    }
+    const head = remote ? new Branch("master", remote) : new Branch("master");
     Object.assign(this, {
       name,
       head,
