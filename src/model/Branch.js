@@ -1,13 +1,18 @@
 const File = require("./File");
 const Log = require("./Log");
 module.exports = Branch = class {
-  constructor(name, parent) {
+  constructor(
+    name,
+    parent = { workingDirectory: [], stagingArea: [], gitRepository: [] }
+  ) {
+    const { workingDirectory, stagingArea, gitRepository } = parent;
+    // deep copy 필요
     Object.assign(this, {
       name,
       parent,
-      workingDirectory: [],
-      stagingArea: [],
-      gitRepository: [],
+      workingDirectory,
+      stagingArea,
+      gitRepository,
       logs: []
     });
   }
