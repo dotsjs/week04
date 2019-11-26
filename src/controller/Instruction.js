@@ -8,7 +8,7 @@ module.exports = Instruction = class {
   touch = ([name]) => this.model.editFile(name);
 
   status = _ => this.model.status();
-  log = _ => {};
+  log = _ => this.model.showLog();
   init = ([name]) => {
     this.model.newRepository(name);
   };

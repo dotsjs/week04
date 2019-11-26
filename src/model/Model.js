@@ -107,4 +107,19 @@ module.exports = Model = class {
       throw new Error("레파지토리가 아닙니다");
     }
   };
+  showLog = _ => {
+    if (this.nowRepository) {
+      const logs = this.nowRepository.head.getLogs().reverse();
+      this.view.print(
+        logs
+          .map(
+            ({ id, message, date }) =>
+              `commit ${id}\nDate : ${date}\n${message}`
+          )
+          .join("\n")
+      );
+    } else {
+      throw new Error("레파지토리가 아닙니다");
+    }
+  };
 };

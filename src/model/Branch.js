@@ -12,6 +12,8 @@ module.exports = Branch = class {
     });
   }
 
+  getLogs = _ => this.logs;
+
   commit = message => {
     const log = new Log(message);
     Object.assign(this, {
