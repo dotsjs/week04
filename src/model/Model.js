@@ -101,6 +101,8 @@ module.exports = Model = class {
   };
   commit = message => {
     if (this.nowRepository) {
+      const log = this.nowRepository.head.commit(message);
+      this.view.print(`[${log.id}] ${message}`);
     } else {
       throw new Error("레파지토리가 아닙니다");
     }

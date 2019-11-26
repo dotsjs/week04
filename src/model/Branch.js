@@ -12,6 +12,16 @@ module.exports = Branch = class {
     });
   }
 
+  commit = message => {
+    const log = new Log(message);
+    Object.assign(this, {
+      stagingArea: [],
+      gitRepository: [...this.gitRepository, ...this.stagingArea],
+      logs: [...this.logs, log]
+    });
+
+    return log;
+  };
   isSameFile = (fileA, fileB) => {
     const { name, date, state } = fileA;
     if (fileB.name === name && fileB.date === date && fileB.state === state) {
