@@ -10,8 +10,12 @@ module.exports = Branch = class {
       log: []
     });
   }
+
   newFile = name =>
     Object.assign(this, {
       workingDirectory: [...this.workingDirectory, new File(name)]
     });
+  getWorkingDirectory = _ => this.workingDirectory;
+  getStagingArea = _ => this.stagingArea;
+  getGitRepository = _ => this.gitRepository;
 };

@@ -9,7 +9,7 @@ module.exports = Instruction = class {
     console.log(details);
   };
 
-  status = _ => {};
+  status = _ => this.model.status();
   log = _ => {};
   init = ([name]) => {
     this.model.newRepository(name);

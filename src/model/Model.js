@@ -22,6 +22,29 @@ module.exports = Model = class {
     }
   };
 
+  status = _ => {
+    if (this.nowRepository) {
+      const head = this.nowRepository.head;
+      const workingDirectory = head.getWorkingDirectory();
+      const stagingArea = head.getStagingArea();
+      const gitRepository = head.getGitRepository();
+
+      this.view.print("working-directory");
+      this.view.print(
+        workingDirectory.map(({ name, date }) => `${name}\t${date}`).join("\n")
+      );
+      this.view.print("staging-area");
+      this.view.print(
+        stagingArea.map(({ name, date }) => `${name}\t${date}`).join("\n")
+      );
+      this.view.print("git-repository");
+      this.view.print(
+        gitRepository.map(({ name, date }) => `${name}\t${date}`).join("\n")
+      );
+    } else {
+      throw new Error("레파지토리가 아닙니다");
+    }
+  };
   getRepository = name =>
     this.repositories.filter(repository => repository.name === name);
 
