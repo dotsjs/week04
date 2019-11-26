@@ -8,11 +8,11 @@ module.exports = Conversation = class {
       terminal: false
     });
 
-    Object.assign(this, { rl, instruction, head: ["", ""] });
+    Object.assign(this, { rl, instruction });
   }
 
   init = _ => {
-    this.rl.question(this.head.join("/") + "> ", this.callback);
+    this.rl.question("/> ", this.callback);
   };
 
   callback = answer => {
@@ -25,7 +25,13 @@ module.exports = Conversation = class {
       } catch (e) {
         console.log(e.message);
       } finally {
-        this.rl.question(this.head.join("/") + "> ", this.callback);
+        const { nowRepository } = this.instruction.model;
+        const repository = nowRepository && nowRepository.name;
+        const branch = nowRepository && nowRepository.head.name;
+        this.rl.question(
+          `${repository ? repository : ""}/${branch ? branch : ""}> `,
+          this.callback
+        );
       }
     }
   };

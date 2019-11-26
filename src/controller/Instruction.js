@@ -2,13 +2,9 @@ module.exports = Instruction = class {
   constructor(model) {
     Object.assign(this, { model });
   }
-  ls = _ => {
-    this.model.list();
-  };
-  new = ([name]) => {};
-  cd = details => {
-    console.log(details);
-  };
+  ls = _ => this.model.list();
+  new = ([name]) => this.model.newFile(name);
+  cd = ([name]) => this.model.changeRepository(name);
   touch = details => {
     console.log(details);
   };
