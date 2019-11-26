@@ -15,7 +15,10 @@ module.exports = Branch = class {
     Object.assign(this, {
       workingDirectory: [...this.workingDirectory, new File(name)]
     });
-  getWorkingDirectory = _ => this.workingDirectory;
-  getStagingArea = _ => this.stagingArea;
-  getGitRepository = _ => this.gitRepository;
+
+  getFiles = _ => ({
+    workingDirectory: this.workingDirectory,
+    stagingArea: this.stagingArea,
+    gitRepository: this.gitRepository
+  });
 };

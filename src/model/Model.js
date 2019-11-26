@@ -25,9 +25,7 @@ module.exports = Model = class {
   status = _ => {
     if (this.nowRepository) {
       const head = this.nowRepository.head;
-      const workingDirectory = head.getWorkingDirectory();
-      const stagingArea = head.getStagingArea();
-      const gitRepository = head.getGitRepository();
+      const { workingDirectory, stagingArea, gitRepository } = head.getFiles();
 
       this.view.print("working-directory");
       this.view.print(
@@ -63,6 +61,14 @@ module.exports = Model = class {
     }
   };
   list = _ => {
-    this.view.print(this.repositories.map(({ name }) => name).join("\n"));
+    if (this.nowRepository) {
+      const files = this.nowRepository.head.getFiles();
+      const fileList = Object.values(files)
+        .flat()
+        .map(({ name, state, date }) => `${name}\t${state}\t${date}`);
+      this.view.print(fileList.join("\n"));
+    } else {
+      this.view.print(this.repositories.map(({ name }) => name).join("\n"));
+    }
   };
 };
