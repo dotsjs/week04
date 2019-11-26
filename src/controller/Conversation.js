@@ -71,17 +71,19 @@ module.exports = Conversation = class {
   utilFunc = (type, details) => {
     switch (type) {
       case "new":
+        this.util.new(details);
         break;
       case "cd":
+        this.util.cd(details);
         break;
       case "ls":
+        this.util.ls(details);
         break;
       case "touch":
+        this.util.touch(details);
         break;
       default:
         throw new Error("\u001b[31m잘못된 명령입니다.\u001b[37m");
     }
-    console.log(type);
-    console.log(details);
   };
 };
