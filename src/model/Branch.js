@@ -22,6 +22,21 @@ module.exports = Branch = class {
     Object.assign(this, {
       workingDirectory: [...this.workingDirectory, new File(name)]
     });
+
+  editFile = file => {
+    file.setState("Modified");
+    if (!this.inWorkingDirectory(file)) {
+      Object.assign(this, {
+        workingDirectory: [...this.workingDirectory, file],
+        stagingArea: this.stagingArea.filter(
+          expect => !this.isSameFile(file, expect)
+        ),
+        gitRepository: this.gitRepository.filter(
+          expect => !this.isSameFile(file, expect)
+        )
+      });
+    }
+  };
   stagingFile = file => {
     file.setState("Staged");
     Object.assign(this, {
@@ -32,8 +47,14 @@ module.exports = Branch = class {
     });
   };
 
-  getFile = name => this.workingDirectory.filter(file => file.name === name);
-  getFiles = _ => ({
+  inWorkingDirectory = file =>
+    this.workingDirectory.some(expect => this.isSameFile(file, expect));
+
+  getFile = name => this.getFiles().filter(file => file.name === name);
+
+  getFiles = _ => Object.values(this.getStatus()).flat();
+
+  getStatus = _ => ({
     workingDirectory: this.workingDirectory,
     stagingArea: this.stagingArea,
     gitRepository: this.gitRepository

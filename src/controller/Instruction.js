@@ -5,9 +5,7 @@ module.exports = Instruction = class {
   ls = _ => this.model.list();
   new = ([name]) => this.model.newFile(name);
   cd = ([name]) => this.model.changeRepository(name);
-  touch = details => {
-    console.log(details);
-  };
+  touch = ([name]) => this.model.editFile(name);
 
   status = _ => this.model.status();
   log = _ => {};

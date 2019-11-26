@@ -21,16 +21,31 @@ module.exports = Model = class {
       throw new Error("레파지토리가 아닙니다");
     }
   };
+  editFile = name => {
+    if (this.nowRepository) {
+      const [file] = this.nowRepository.head.getFile(name);
+      if (file) {
+        this.nowRepository.head.editFile(file);
+        this.view.print(name + " 파일이 수정되었습니다");
+      } else {
+        throw new Error("파일이 존재하지 않습니다.");
+      }
+    } else {
+      throw new Error("레파지토리가 아닙니다");
+    }
+  };
 
   stagingFile = name => {
     if (this.nowRepository) {
       const [file] = this.nowRepository.head.getFile(name);
       if (file) {
-        this.nowRepository.head.stagingFile(file);
+        if (this.nowRepository.head.inWorkingDirectory(file)) {
+          this.nowRepository.head.stagingFile(file);
+        }
+        this.view.print(name + " 파일이 Staging 됨");
       } else {
-        throw new Error("파일이 working directory에 없음");
+        throw new Error("파일이 존재하지 않습니다");
       }
-      this.view.print(name + " 파일이 Staging 됨");
     } else {
       throw new Error("레파지토리가 아닙니다");
     }
@@ -38,7 +53,7 @@ module.exports = Model = class {
   status = _ => {
     if (this.nowRepository) {
       const head = this.nowRepository.head;
-      const { workingDirectory, stagingArea, gitRepository } = head.getFiles();
+      const { workingDirectory, stagingArea, gitRepository } = head.getStatus();
 
       this.view.print("working-directory");
       this.view.print(
@@ -76,10 +91,10 @@ module.exports = Model = class {
   list = _ => {
     if (this.nowRepository) {
       const files = this.nowRepository.head.getFiles();
-      const fileList = Object.values(files)
-        .flat()
-        .map(({ name, state, date }) => `${name}\t${state}\t${date}`);
-      this.view.print(fileList.join("\n"));
+      const fileList = files
+        .map(({ name, state, date }) => `${name}\t${state}\t${date}`)
+        .join("\n");
+      this.view.print(fileList);
     } else {
       this.view.print(this.repositories.map(({ name }) => name).join("\n"));
     }
