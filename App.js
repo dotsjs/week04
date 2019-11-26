@@ -1,10 +1,8 @@
 const Conversation = require("./src/controller/Conversation");
-const Git = require("./src/controller/Git");
-const Util = require("./src/controller/Util");
+const Instruction = require("./src/controller/Instruction");
 const Model = require("./src/model/model");
 
 const model = new Model();
-const git = new Git(model);
-const util = new Util(model);
-const conversation = new Conversation({ git, util });
+const instruction = new Instruction(model);
+const conversation = new Conversation(instruction);
 conversation.init();

@@ -1,14 +1,14 @@
 const readline = require("readline");
 
 module.exports = Conversation = class {
-  constructor({ git, util }) {
+  constructor(instruction) {
     const rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
       terminal: false
     });
 
-    Object.assign(this, { rl, git, util, head: ["", ""] });
+    Object.assign(this, { rl, instruction, head: ["", ""] });
   }
 
   init = _ => {
@@ -44,43 +44,50 @@ module.exports = Conversation = class {
   gitFunc = ([type, ...details]) => {
     switch (type) {
       case "init":
+        this.instruction.init(details);
         break;
       case "clone":
+        this.instruction.clone(details);
         break;
       case "add":
+        this.instruction.add(details);
         break;
       case "commit":
+        this.instruction.commit(details);
         break;
       case "status":
+        this.instruction.status(details);
         break;
       case "log":
+        this.instruction.log(details);
         break;
       case "branch":
+        this.instruction.branch(details);
         break;
       case "checkout":
+        this.instruction.checkout(details);
         break;
       case "push":
+        this.instruction.push(details);
         break;
       default:
         throw new Error("\u001b[31m잘못된 명령입니다.\u001b[37m");
     }
-    console.log(type);
-    console.log(details);
   };
 
   utilFunc = (type, details) => {
     switch (type) {
       case "new":
-        this.util.new(details);
+        this.instruction.new(details);
         break;
       case "cd":
-        this.util.cd(details);
+        this.instruction.cd(details);
         break;
       case "ls":
-        this.util.ls(details);
+        this.instruction.ls(details);
         break;
       case "touch":
-        this.util.touch(details);
+        this.instruction.touch(details);
         break;
       default:
         throw new Error("\u001b[31m잘못된 명령입니다.\u001b[37m");
