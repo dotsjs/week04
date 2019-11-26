@@ -99,4 +99,10 @@ module.exports = Model = class {
       this.view.print(this.repositories.map(({ name }) => name).join("\n"));
     }
   };
+  commit = message => {
+    if (this.nowRepository) {
+    } else {
+      throw new Error("레파지토리가 아닙니다");
+    }
+  };
 };

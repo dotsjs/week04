@@ -14,7 +14,9 @@ module.exports = Instruction = class {
   };
   clone = details => {};
   add = ([name]) => this.model.stagingFile(name);
-  commit = details => {};
+  commit = ([message]) => {
+    this.model.commit(message);
+  };
   branch = details => {};
   checkout = details => {};
   push = details => {};

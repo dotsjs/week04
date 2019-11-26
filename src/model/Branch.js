@@ -1,4 +1,5 @@
 const File = require("./File");
+const Log = require("./Log");
 module.exports = Branch = class {
   constructor(name, parent) {
     Object.assign(this, {
@@ -7,7 +8,7 @@ module.exports = Branch = class {
       workingDirectory: [],
       stagingArea: [],
       gitRepository: [],
-      log: []
+      logs: []
     });
   }
 
