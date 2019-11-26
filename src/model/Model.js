@@ -13,10 +13,18 @@ module.exports = Model = class {
     });
     this.view.print("레파지토리 생성 완료");
   };
-  newFile = name => {};
+  newFile = name => {
+    if (this.nowRepository) {
+      this.nowRepository.head.newFile(name);
+      this.view.print(name + " 파일이 생성되었습니다");
+    } else {
+      throw new Error("레파지토리가 아닙니다");
+    }
+  };
 
   getRepository = name =>
     this.repositories.filter(repository => repository.name === name);
+
   changeRepository = name => {
     const [repository] = this.getRepository(name);
     if (repository) {
