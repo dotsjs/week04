@@ -9,69 +9,72 @@ module.exports = Model = class {
       view
     });
   }
+
+  checkNow = callback => {
+    if (this.nowRepository) {
+      callback();
+    } else {
+      throw new Error("\u001b[31m레파지토리가 아닙니다\u001b[37m");
+    }
+  };
+
   newRepository = name => {
     Object.assign(this, {
       repositories: [...this.repositories, new Repository(name)]
     });
-    this.view.print("레파지토리 생성 완료");
+    this.view.print("\u001b[32m레파지토리 생성 완료\u001b[37m");
   };
   newFile = name => {
-    if (this.nowRepository) {
+    this.checkNow(() => {
       this.nowRepository.head.newFile(name);
-      this.view.print(name + " 파일이 생성되었습니다");
-    } else {
-      throw new Error("레파지토리가 아닙니다");
-    }
+      this.view.print(`\u001b[32m${name} 파일이 생성되었습니다\u001b[37m`);
+    });
   };
   editFile = name => {
-    if (this.nowRepository) {
+    this.checkNow(() => {
       const [file] = this.nowRepository.head.getFile(name);
       if (file) {
         this.nowRepository.head.editFile(file);
-        this.view.print(name + " 파일이 수정되었습니다");
+        this.view.print(`\u001b[34m${name} 파일이 수정되었습니다\u001b[37m`);
       } else {
-        throw new Error("파일이 존재하지 않습니다.");
+        throw new Error("\u001b[31m파일이 존재하지 않습니다\u001b[37m");
       }
-    } else {
-      throw new Error("레파지토리가 아닙니다");
-    }
+    });
   };
 
   stagingFile = name => {
-    if (this.nowRepository) {
+    this.checkNow(() => {
       const [file] = this.nowRepository.head.getFile(name);
       if (file) {
         if (this.nowRepository.head.inWorkingDirectory(file)) {
           this.nowRepository.head.stagingFile(file);
         }
-        this.view.print(name + " 파일이 Staging 됨");
+        this.view.print(
+          `\u001b[32m${name} 파일이 Staging 되었습니다\u001b[37m`
+        );
       } else {
-        throw new Error("파일이 존재하지 않습니다");
+        throw new Error("\u001b[31m파일이 존재하지 않습니다\u001b[37m");
       }
-    } else {
-      throw new Error("레파지토리가 아닙니다");
-    }
+    });
   };
   status = _ => {
-    if (this.nowRepository) {
+    this.checkNow(() => {
       const head = this.nowRepository.head;
       const { workingDirectory, stagingArea, gitRepository } = head.getStatus();
 
-      this.view.print("working-directory");
+      this.view.print("\u001b[34m--working-directory\u001b[37m");
       this.view.print(
         workingDirectory.map(({ name, date }) => `${name}\t${date}`).join("\n")
       );
-      this.view.print("staging-area");
+      this.view.print("\u001b[34m--staging-area\u001b[37m");
       this.view.print(
         stagingArea.map(({ name, date }) => `${name}\t${date}`).join("\n")
       );
-      this.view.print("git-repository");
+      this.view.print("\u001b[34m--git-repository\u001b[37m");
       this.view.print(
         gitRepository.map(({ name, date }) => `${name}\t${date}`).join("\n")
       );
-    } else {
-      throw new Error("레파지토리가 아닙니다");
-    }
+    });
   };
   getRepository = name =>
     this.repositories.filter(repository => repository.name === name);
@@ -80,13 +83,15 @@ module.exports = Model = class {
     const [repository] = this.getRepository(name);
     if (repository) {
       Object.assign(this, { nowRepository: repository });
-      this.view.print("레파지토리 변경 완료");
+      this.view.print("\u001b[34m레파지토리 변경 완료\u001b[37m");
     } else {
       if (name) {
-        throw new Error("해당 레파지토리가 존재하지 않습니다");
+        throw new Error(
+          "\u001b[31m해당 레파지토리가 존재하지 않습니다\u001b[37m"
+        );
       } else {
         Object.assign(this, { nowRepository: null });
-        this.view.print("레파지토리 변경 완료");
+        this.view.print("\u001b[34m레파지토리 변경 완료\u001b[37m");
       }
     }
   };
@@ -102,18 +107,16 @@ module.exports = Model = class {
     }
   };
   commit = message => {
-    if (this.nowRepository) {
+    this.checkNow(() => {
       const log = this.nowRepository.head.commit(message);
-      this.view.print(`[${log.id}] ${message}`);
-    } else {
-      throw new Error("레파지토리가 아닙니다");
-    }
+      this.view.print(`\u001b[36m[${log.id}] ${message}\u001b[37m`);
+    });
   };
   makeBranch = name => {
-    if (this.nowRepository) {
+    this.checkNow(() => {
       if (name) {
         this.nowRepository.makeBranch(name);
-        this.view.print("브랜치 생성 완료");
+        this.view.print("\u001b[33m브랜치 생성 완료\u001b[37m");
       } else {
         const branches = this.nowRepository.getBranches();
         this.view.print(
@@ -124,42 +127,36 @@ module.exports = Model = class {
             .join("\n")
         );
       }
-    } else {
-      throw new Error("레파지토리가 아닙니다");
-    }
+    });
   };
 
   changeBranch = name => {
-    if (this.nowRepository) {
+    this.checkNow(() => {
       if (name) {
         this.nowRepository.changeBranch(name);
-        this.view.print("브랜치 이동 완료");
+        this.view.print("\u001b[33m브랜치 이동 완료\u001b[37m");
       } else {
-        throw new Error("브랜치 이름을 작성하세요");
+        throw new Error("\u001b[32m브랜치 이름을 작성하세요\u001b[37m");
       }
-    } else {
-      throw new Error("레파지토리가 아닙니다");
-    }
+    });
   };
   showLog = _ => {
-    if (this.nowRepository) {
+    this.checkNow(() => {
       const logs = this.nowRepository.head.getLogs().reverse();
       this.view.print(
         logs
           .map(
             ({ id, message, date }) =>
-              `commit ${id}\nDate : ${date}\n${message}`
+              `\u001b[33mcommit ${id}\u001b[37m\n\u001b[32mDate : ${date}\u001b[37m\n${message}`
           )
           .join("\n")
       );
-    } else {
-      throw new Error("레파지토리가 아닙니다");
-    }
+    });
   };
 
   getRemote = name => this.remotes.filter(remote => remote.name === name);
   saveRepository = _ => {
-    if (this.nowRepository) {
+    this.checkNow(() => {
       const [remote] = this.getRemote(this.nowRepository.name);
       if (!remote) {
         Object.assign(this, {
@@ -168,9 +165,8 @@ module.exports = Model = class {
       } else {
         remote.update(this.nowRepository);
       }
-    } else {
-      throw new Error("레파지토리가 아닙니다");
-    }
+      this.view.print("\u001b[32m원격저장소에 저장하였습니다\u001b[37m");
+    });
   };
   loadRepository = name => {
     if (this.nowRepository === null) {
@@ -182,12 +178,12 @@ module.exports = Model = class {
             new Repository(remote.name, remote)
           ]
         });
-        this.view.print(name + " 레파지토리 클론 완료");
+        this.view.print(`\u001b[32m${name} 레파지토리 클론 완료\u001b[37m`);
       } else {
-        throw new Error("없는 레파지토리 입니다");
+        throw new Error("\u001b[31m존재하지 않는 레파지토리 입니다\u001b[37m");
       }
     } else {
-      throw new Error("루트에서 실행하세요");
+      throw new Error("\u001b[31m루트에서 실행하세요\u001b[37m");
     }
   };
 };

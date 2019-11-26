@@ -19,7 +19,7 @@ module.exports = Repository = class {
       const newBranch = new Branch(name, this.head);
       Object.assign(this, { branchList: [...this.branchList, newBranch] });
     } else {
-      throw new Error("이미 존재하는 브랜치 입니다");
+      throw new Error("\u001b[31m이미 존재하는 브랜치 입니다\u001b[37m");
     }
   };
   changeBranch = name => {
@@ -27,7 +27,7 @@ module.exports = Repository = class {
     if (branch) {
       Object.assign(this, { head: branch });
     } else {
-      throw new Error("없는 브랜치 입니다");
+      throw new Error("\u001b[31m존재하지 않는 브랜치 입니다\u001b[37m");
     }
   };
   getBranch = name => this.branchList.filter(branch => branch.name === name);
