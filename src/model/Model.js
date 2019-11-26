@@ -1,8 +1,10 @@
 const Repository = require("./Repository");
+const Remote = require("./Remote");
 module.exports = Model = class {
   constructor(view) {
     Object.assign(this, {
       repositories: [],
+      remotes: [],
       nowRepository: null,
       view
     });
@@ -150,6 +152,22 @@ module.exports = Model = class {
           )
           .join("\n")
       );
+    } else {
+      throw new Error("레파지토리가 아닙니다");
+    }
+  };
+
+  getRemote = name => this.remotes.filter(remote => remote.name === name);
+  saveRepository = _ => {
+    if (this.nowRepository) {
+      const [remote] = this.getRemote(this.nowRepository.name);
+      if (!remote) {
+        Object.assign(this, {
+          remotes: [...this.remotes, new Remote(this.nowRepository)]
+        });
+      } else {
+        remote.update(this.nowRepository);
+      }
     } else {
       throw new Error("레파지토리가 아닙니다");
     }

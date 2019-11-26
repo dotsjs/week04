@@ -15,5 +15,5 @@ module.exports = Instruction = class {
   commit = ([message]) => this.model.commit(message);
   branch = ([name]) => this.model.makeBranch(name);
   checkout = ([name]) => this.model.changeBranch(name);
-  push = details => {};
+  push = _ => this.model.saveRepository();
 };
