@@ -17,6 +17,10 @@ function cdWithParam(repositoryName){
   return `${repositoryName}/${curBranch}`;
 }
 
+function cdWithoutParam(){
+  return '';
+}
+
 function gitParsing(cmd){
   let arr = cmd.split(' ');
   if(arr && arr.length === 3 && arr[0] ==='git' && arr[1] === 'init'){
@@ -24,6 +28,9 @@ function gitParsing(cmd){
   }
   else if (arr && arr.length === 2 && arr[0] === 'cd'){
     return cdWithParam(arr[1]);
+  }
+  else if (arr && arr.length === 1 && arr[0] === 'cd'){
+    return cdWithoutParam();
   }
 }
 
